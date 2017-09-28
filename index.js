@@ -17,12 +17,12 @@ var accepts = require('accepts');
 var createError = require('http-errors');
 var debug = require('debug')('serve-index');
 var escapeHtml = require('escape-html');
-var fs = require('fs')
-  , path = require('path')
-  , normalize = path.normalize
-  , sep = path.sep
-  , extname = path.extname
-  , join = path.join;
+var fs = require('fs'),
+  path = require('path'),
+  normalize = path.normalize,
+  sep = path.sep,
+  extname = path.extname,
+  join = path.join;
 var Batch = require('batch');
 var mime = require('mime-types');
 var parseUrl = require('parseurl');
@@ -121,15 +121,15 @@ function serveIndex(root, options) {
 
     // check if we have a directory
     debug('stat "%s"', path);
-    fs.stat(path, function(err, stat){
+    fs.stat(path, function (err, stat) {
       if (err && err.code === 'ENOENT') {
         return next();
       }
 
       if (err) {
-        err.status = err.code === 'ENAMETOOLONG'
-          ? 414
-          : 500;
+        err.status = err.code === 'ENAMETOOLONG' ?
+          414 :
+          500;
         return next(err);
       }
 
@@ -137,9 +137,9 @@ function serveIndex(root, options) {
 
       // fetch files
       debug('readdir "%s"', path);
-      fs.readdir(path, function(err, files){
+      fs.readdir(path, function (err, files) {
         if (err) return next(err);
-    
+
         files.sort();
 
         // content-negotiation
@@ -159,9 +159,9 @@ function serveIndex(root, options) {
  */
 
 serveIndex.html = function _html(req, res, files, next, dir, showUp, icons, path, view, template, stylesheet) {
-  var render = typeof template !== 'function'
-    ? createHtmlRender(template)
-    : template
+  var render = typeof template !== 'function' ?
+    createHtmlRender(template) :
+    template
 
   if (showUp) {
     files.unshift('..');
@@ -173,7 +173,10 @@ serveIndex.html = function _html(req, res, files, next, dir, showUp, icons, path
 
     // combine the stats into the file list
     var fileList = files.map(function (file, i) {
-      return { name: file, stat: stats[i] };
+      return {
+        name: file,
+        stat: stats[i]
+      };
     });
 
     // read stylesheet
@@ -221,18 +224,20 @@ serveIndex.plain = function _plain(req, res, files) {
  */
 
 function createHtmlFileList(files, dir, useIcons, view) {
-  var html = '<ul id="files" class="view-' + escapeHtml(view) + '">'
-    + (view == 'details' ? (
-      '<li class="header">'
-      + '<span class="name">Name</span>'
-      + '<span class="size">Size</span>'
-      + '<span class="date">Modified</span>'
-      + '</li>') : '');
+  var html = '<ul id="files" class="view-' + escapeHtml(view) + '">' +
+    (view == 'details' ? (
+      '<li class="header">' +
+      '<span class="name">Name</span>' +
+      '<span class="size">Size</span>' +
+      '<span class="date">Modified</span>' +
+      '</li>') : '');
 
   html += files.map(function (file) {
     var classes = [];
     var isDir = file.stat && file.stat.isDirectory();
-    var path = dir.split('/').map(function (c) { return encodeURIComponent(c); });
+    var path = dir.split('/').map(function (c) {
+      return encodeURIComponent(c);
+    });
 
     if (useIcons) {
       classes.push('icon');
@@ -240,39 +245,35 @@ function createHtmlFileList(files, dir, useIcons, view) {
 
     path.push(encodeURIComponent(file.name));
 
-    var date = file.stat && file.name !== '..'
-      ? file.stat.mtime.toLocaleDateString() + ' ' + file.stat.mtime.toLocaleTimeString()
-      : '';
-    var size = file.stat && !isDir
-      ? file.stat.size
-      : '';
+    var date = file.stat && file.name !== '..' ?
+      file.stat.mtime.toLocaleDateString() + ' ' + file.stat.mtime.toLocaleTimeString() :
+      '';
+    var size = file.stat && !isDir ?
+      file.stat.size :
+      '';
 
-      var href=escapeHtml(normalizeSlashes(normalize(path.join('/'))));
+    var href = escapeHtml(normalizeSlashes(normalize(path.join('/'))));
 
-    var result= '<li><a href="'+href 
-      + '" class="' + escapeHtml(classes.join(' ')) + '"'
-      + ' title="' + escapeHtml(file.name) + '">'
-      + '<span class="name">' + escapeHtml(file.name) + '</span>'
-      + '<span class="size">' + escapeHtml(size) + '</span>'
-      + '<span class="date">' + escapeHtml(date) + '</span>'
-      + '</a></li>';
-      
-      var ext = extname(file.name);
-      console.log('ext',ext)
-      if(ext==='.mp4' && !isDir){
-        // result+='<div class="video-wrap"><video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" data-setup=\'{ "playbackRates": [0.5, 1, 1.5, 2] }\''
-        // +' <source src="'+href+'" type=\'video/mp4\'>'
-        // +'</video></div>';
-result+= '<div class="video-wrap"><video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" '
-+'data-setup=\'{ "playbackRates": [0.5, 1, 1.5, 2] }\'>'
-  +'<source src="'+href+'" type=\'video/mp4\'>'
-  +'</video></div>'
+    var result = '<li><a href="' + href +
+      '" class="' + escapeHtml(classes.join(' ')) + '"' +
+      ' title="' + escapeHtml(file.name) + '">' +
+      '<span class="name">' + escapeHtml(file.name) + '</span>' +
+      '<span class="size">' + escapeHtml(size) + '</span>' +
+      '<span class="date">' + escapeHtml(date) + '</span>' +
+      '</a></li>';
 
-      }
+    var ext = extname(file.name);
+    if (ext === '.mp4' && !isDir) {
+      result += '<div class="video-wrap"><video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" ' +
+        'data-setup=\'{ "playbackRates": [0.5, 1, 1.5, 2] }\'>' +
+        '<source src="' + href + '" type=\'video/mp4\'>' +
+        '</video></div>'
 
-      return result;
+    }
 
-      
+    return result;
+
+
   }).join('\n');
 
   html += '</ul>';
@@ -323,7 +324,7 @@ function htmlPath(dir) {
 }
 
 function iconLookup(filename) {
- 
+
   return {
     className: 'icon-default',
     fileName: icons.default
@@ -350,7 +351,7 @@ function normalizeSlashes(path) {
 
 
 
-function send (res, type, body) {
+function send(res, type, body) {
   // security header for content sniffing
   res.setHeader('X-Content-Type-Options', 'nosniff')
 
@@ -372,9 +373,9 @@ function stat(dir, files, cb) {
 
   batch.concurrency(10);
 
-  files.forEach(function(file){
-    batch.push(function(done){
-      fs.stat(join(dir, file), function(err, stat){
+  files.forEach(function (file) {
+    batch.push(function (done) {
+      fs.stat(join(dir, file), function (err, stat) {
         if (err && err.code !== 'ENOENT') return done(err);
 
         // pass ENOENT as null stat, not error
@@ -385,4 +386,3 @@ function stat(dir, files, cb) {
 
   batch.end(cb);
 }
-
