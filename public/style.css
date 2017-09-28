@@ -176,10 +176,22 @@ ul#files.view-details li.header {
 .view-details .date {
   width: 30%;
 }
+
 .view-details .size,
 .view-details .date {
   text-align: right;
   direction: rtl;
+}
+
+.view-details .video-wrap{
+  width:320px;
+  margin:0 auto;
+}
+
+.view-details .video-js{
+  width:320px;
+  height:180px;
+  margin-bottom:10px;
 }
 
 /*mobile*/
@@ -254,4 +266,13 @@ ul#files.view-details li.header {
   #files .icon .name {
     text-indent: 41px;
   }
+}
+
+.avatar{
+  border-radius: 50%;
+  width:30px;
+}
+
+.test{
+  display: inline-block;
 }
