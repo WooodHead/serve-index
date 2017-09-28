@@ -265,7 +265,7 @@ function createHtmlFileList(files, dir, useIcons, view) {
     var ext = extname(file.name);
     if (ext === '.mp4' && !isDir) {
       result += '<div class="video-wrap"><video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" ' +
-        'data-setup=\'{ "playbackRates": [0.5, 1, 1.5, 2] }\'>' +
+        'data-setup=\'{ "playbackRates": [0.5, 1, 1.5, 2], aspectRatio:"16:9" }\'>' +
         '<source src="' + href + '" type=\'video/mp4\'>' +
         '</video></div>'
 

@@ -267,12 +267,3 @@ ul#files.view-details li.header {
     text-indent: 41px;
   }
 }
-
-.avatar{
-  border-radius: 50%;
-  width:30px;
-}
-
-.test{
-  display: inline-block;
-}
